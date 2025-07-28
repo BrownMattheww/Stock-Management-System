@@ -41,9 +41,13 @@ public class UsersController {
     }
 
     @PutMapping("/editUser")
-    public ResponseEntity<Users> editUser(@RequestBody Users user) {
-        Users updatedUser = usersService.updateUser(user);
-        return ResponseEntity.ok(updatedUser);
+    public ResponseEntity<?> editUser(@RequestBody Users user) {
+        try {
+            Users updatedUser = usersService.updateUser(user);
+            return ResponseEntity.ok(updatedUser);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/deleteUser/{id}")

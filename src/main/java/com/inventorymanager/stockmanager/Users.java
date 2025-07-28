@@ -1,6 +1,8 @@
 package com.inventorymanager.stockmanager;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -10,17 +12,22 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
 
-    private String role;
-
     private String username;
 
     private String password;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     public Users() {
     }
 
     public Users(String role, String username, String password) {
-        this.role = role;
         this.username = username;
         this.password = password;
     }
@@ -39,14 +46,6 @@ public class Users {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public Long getUserId() {
