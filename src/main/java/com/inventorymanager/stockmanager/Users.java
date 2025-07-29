@@ -1,6 +1,8 @@
 package com.inventorymanager.stockmanager;
 
 import jakarta.persistence.*;
+import org.springframework.beans.PropertyValues;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,5 +56,13 @@ public class Users {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

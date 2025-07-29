@@ -23,8 +23,9 @@ public class UsersService {
         return userRepository.findAll();
     }
 
-    public Users findById(@PathVariable Long userId) {
-        return userRepository.findById(userId).orElse(null);
+    public Users findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + id));
     }
 
     public Optional<Users> findByUsername(@NotNull String username) {
@@ -38,13 +39,14 @@ public class UsersService {
         return userRepository.save(user);
     }
 
-    public Users updateUser(@NotNull Users user) {
+    public Users updateUser(@NotNull Users user,  @NotNull Long id) {
         return userRepository.save(user);
     }
 
-    public void deleteUser(@NotNull Integer id) {
-        Users user = userRepository.findById(Long.valueOf(id))
+    public boolean deleteUser(@NotNull Long id) {
+        Users user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User with id " + id + " not found!"));
         userRepository.delete(user);
+        return false;
     }
 }

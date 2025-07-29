@@ -4,19 +4,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequestMapping("/users")
 @RestController
 public class UsersController {
 
     private final UsersService usersService;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UsersController(UsersService usersService) {
+    public UsersController(UsersService usersService, PasswordEncoder passwordEncoder, UserRepository userRepository) {
         this.usersService = usersService;
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -25,43 +32,64 @@ public class UsersController {
     }
 
     @GetMapping("/{userId}")
-    public Users findById(@PathVariable Long userId) {
-        return usersService.findById(userId);
+    public ResponseEntity<Users> findById(@PathVariable Long userId) {
+        Users user = usersService.findById(userId);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/username/{username}")
-    public Optional<Users> findByUsername(@PathVariable String username) {
-        return usersService.findByUsername(username);
+    public ResponseEntity<Users> findByUsername(@PathVariable String username) {
+        return usersService.findByUsername(username)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/createUser")
-    public ResponseEntity<Users> createUser(@RequestBody Users user) {
-        Users newUser = usersService.createUser(user);
-        return ResponseEntity.ok(newUser);
-    }
-
-    @PutMapping("/editUser")
-    public ResponseEntity<?> editUser(@RequestBody Users user) {
+    @PostMapping()
+    public ResponseEntity<?> createUser(@RequestBody Users user) {
+        if(user.getUsername() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(usersService.createUser(user));
+        }
+        if (user.getPassword() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(usersService.createUser(user));
+        }
         try {
-            Users updatedUser = usersService.updateUser(user);
-            return ResponseEntity.ok(updatedUser);
+            Users newUser = new Users();
+            newUser.setUsername(user.getUsername());
+            newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            newUser.setRoles(user.getRoles());
+            return ResponseEntity.status(HttpStatus.CREATED).body(usersService.createUser(newUser));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while creating the user");
+        }
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> editUser(@PathVariable Long userId, @RequestBody Users user) {
+        try {
+            Users updatedUser = usersService.findById(userId);
+            updatedUser.setUsername(user.getUsername());
+            updatedUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            updatedUser.setRoles(user.getRoles());
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         try {
-            usersService.deleteUser(id);
-            return ResponseEntity.ok("User deleted successfully");
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            boolean deleted = usersService.deleteUser(userId);
+            if (deleted) {
+                return ResponseEntity.ok("User deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while deleting the user");
         }
-    }
-
-    @GetMapping("/users/hello")
-    public String hello() {
-        return "Hello World!";
     }
 }
