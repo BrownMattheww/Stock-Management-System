@@ -1,4 +1,4 @@
-package com.inventorymanager.stockmanager;
+package com.inventorymanager.stockmanager.users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

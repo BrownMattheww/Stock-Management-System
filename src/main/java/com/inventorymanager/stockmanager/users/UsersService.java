@@ -1,10 +1,12 @@
-package com.inventorymanager.stockmanager;
+package com.inventorymanager.stockmanager.users;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +15,12 @@ import java.util.Optional;
 public class UsersService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UsersService(UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     public List<Users> findAll() {
@@ -35,18 +39,34 @@ public class UsersService {
         return userRepository.findByUsername(username);
     }
 
-    public Users createUser(@NotNull Users user) {
-        return userRepository.save(user);
+    public Users createUser(Users user) {
+        Users newUser = new Users();
+        newUser.setUsername(user.getUsername());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.setRoles(user.getRoles());
+
+        return userRepository.save(newUser);
     }
 
-    public Users updateUser(@NotNull Users user,  @NotNull Long id) {
-        return userRepository.save(user);
+    public Users updateUser(@NotNull Users user, @NotNull Long id) {
+        Optional<Users> optionalUser = userRepository.findById(id);
+
+        if (!optionalUser.isPresent()) {
+            throw new EntityNotFoundException("User with ID " + id + " not found");
+        }
+
+        Users updatedUser = optionalUser.get();
+        updatedUser.setUsername(user.getUsername());
+        updatedUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        updatedUser.setRoles(user.getRoles());
+
+        return userRepository.save(updatedUser);
     }
 
     public boolean deleteUser(@NotNull Long id) {
         Users user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User with id " + id + " not found!"));
         userRepository.delete(user);
-        return false;
+        return true;
     }
 }

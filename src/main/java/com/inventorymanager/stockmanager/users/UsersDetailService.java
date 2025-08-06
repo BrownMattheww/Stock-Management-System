@@ -1,4 +1,4 @@
-package com.inventorymanager.stockmanager;
+package com.inventorymanager.stockmanager.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

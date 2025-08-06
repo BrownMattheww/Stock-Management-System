@@ -1,7 +1,9 @@
-package com.inventorymanager.stockmanager;
+package com.inventorymanager.stockmanager.users;
 
+import com.inventorymanager.stockmanager.roles.Role;
 import jakarta.persistence.*;
-import org.springframework.beans.PropertyValues;
+import jakarta.validation.constraints.NotBlank;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,8 +16,10 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
 
+    @NotBlank(message = "Username is required")
     private String username;
 
+    @NotBlank(message = "password")
     private String password;
 
     @ManyToMany

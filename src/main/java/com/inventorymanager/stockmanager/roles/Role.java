@@ -1,5 +1,6 @@
-package com.inventorymanager.stockmanager;
+package com.inventorymanager.stockmanager.roles;
 
+import com.inventorymanager.stockmanager.users.Users;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
