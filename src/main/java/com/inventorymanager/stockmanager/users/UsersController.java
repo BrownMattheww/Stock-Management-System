@@ -55,7 +55,8 @@ public class UsersController {
     @PutMapping("/{userId}")
     public ResponseEntity<?> editUser(@PathVariable Long userId, @RequestBody Users user) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).build();
+            Users amendedUser = usersService.updateUser(user,  userId);
+            return ResponseEntity.ok(amendedUser);
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

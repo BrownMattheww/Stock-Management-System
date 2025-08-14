@@ -47,7 +47,7 @@ public class StockController {
     public ResponseEntity<?> deleteStock(@PathVariable("id") Long stockId) {
         try {
             Stock deletedStock = stockService.deleteStock(stockId);
-            return ResponseEntity.ok("Stock deleted successfully");
+            return ResponseEntity.ok(deletedStock);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
