@@ -47,4 +47,8 @@ public class Stock {
     public void setStockPrice(BigDecimal stockPrice) {
         this.stockPrice = stockPrice;
     }
+
+    public Long getId() {
+        return stockId;
+    }
 }
