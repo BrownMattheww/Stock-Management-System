@@ -1,8 +1,10 @@
 package com.inventorymanager.stockmanager.stockLocation;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -15,9 +17,13 @@ public class StockLocationController {
         this.stockLocationService = stockLocationService;
     }
 
-    @GetMapping
-    public List<StockLocation> getStockLocations() {
-        return stockLocationService.findAll();
+    @GetMapping("/stock-locations")
+    public List<StockLocationDTO> findAllStockLocations() {
+        try {
+            return stockLocationService.findAllStockLocationDetails();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch stock location details", e);
+        }
     }
 
     @GetMapping("/{id}")

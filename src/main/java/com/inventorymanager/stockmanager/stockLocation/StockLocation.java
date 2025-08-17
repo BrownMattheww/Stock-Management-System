@@ -11,10 +11,12 @@ public class StockLocation {
 
     @ManyToOne
     @MapsId("stockId")
+    @JoinColumn(name = "stock_id")
     private Stock stock;
 
     @ManyToOne
     @MapsId("locationId")
+    @JoinColumn(name = "location_id")
     private Location location;
 
     @Column(nullable = false)

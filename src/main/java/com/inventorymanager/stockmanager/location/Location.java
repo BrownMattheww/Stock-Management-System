@@ -1,14 +1,16 @@
 package com.inventorymanager.stockmanager.location;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import com.inventorymanager.stockmanager.stockLocation.StockLocation;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Location {
     @Id
+    @Column(name = "location_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long locationId;
 
@@ -17,6 +19,9 @@ public class Location {
 
     @NotBlank
     private String shelf;
+
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<StockLocation> stockLocations = new HashSet<>();
 
     public Location() {
     }

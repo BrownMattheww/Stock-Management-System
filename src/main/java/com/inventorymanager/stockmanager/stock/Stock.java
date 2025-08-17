@@ -1,12 +1,12 @@
 package com.inventorymanager.stockmanager.stock;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import com.inventorymanager.stockmanager.stockLocation.StockLocation;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Stock {
@@ -19,6 +19,9 @@ public class Stock {
 
     @NotEmpty
     private BigDecimal stockPrice;
+
+    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
+    private Set<StockLocation> stockLocations = new HashSet<>();
 
     public Stock() {
     }

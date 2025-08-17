@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,5 +52,13 @@ public class StockLocationService {
                 .orElseThrow(() -> new UsernameNotFoundException("Stock Location with id " + id + " not found!"));
 
         StockLocationRepository.delete(stockLocation);
+    }
+
+    public List<StockLocationDTO>  findAllStockLocationDetails() {
+        List<StockLocationDTO> stockLocationResults = StockLocationRepository.findAllStockLocationDetails();
+        if (!stockLocationResults.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return stockLocationResults;
     }
 }
