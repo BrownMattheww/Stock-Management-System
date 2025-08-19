@@ -56,7 +56,7 @@ public class StockLocationService {
 
     public List<StockLocationDTO>  findAllStockLocationDetails() {
         List<StockLocationDTO> stockLocationResults = StockLocationRepository.findAllStockLocationDetails();
-        if (!stockLocationResults.isEmpty()) {
+        if (stockLocationResults.isEmpty()) {
             return Collections.emptyList();
         }
         return stockLocationResults;

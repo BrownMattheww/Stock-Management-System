@@ -54,14 +54,6 @@ public class Users {
         this.username = username;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public Set<Role> getRoles() {
         return roles;
     }
