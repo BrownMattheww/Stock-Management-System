@@ -11,7 +11,7 @@ import java.util.Set;
 public class Location {
     @Id
     @Column(name = "location_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long locationId;
 
     @NotBlank

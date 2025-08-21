@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity
 public class Stock {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long stockId;
 
     @NotEmpty
