@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,9 +37,9 @@ public class UsersService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + id));
     }
 
-    public Optional<Users> findByUsername(@NotNull String username) {
+    public Users findByUsername(@NotNull String username) {
         if (username.trim().isEmpty()) {
-            return Optional.empty();
+            return null;
         }
         return userRepository.findByUsername(username);
     }
@@ -85,6 +84,8 @@ public class UsersService {
     public boolean deleteUser(@NotNull Long id) {
         Users user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User with id " + id + " not found!"));
+        user.getRoles().clear();
+        userRepository.save(user);
         userRepository.delete(user);
         return true;
     }

@@ -36,9 +36,13 @@ public class UsersController {
 
     @GetMapping("/username/{username}")
     public ResponseEntity<Users> findByUsername(@PathVariable String username) {
-        return usersService.findByUsername(username)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Users user = usersService.findByUsername(username);
+
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
