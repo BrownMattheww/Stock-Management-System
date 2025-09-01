@@ -1,5 +1,6 @@
 package com.inventorymanager.stockmanager.stock;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,12 +34,14 @@ public class StockController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<Stock> updateStock(@RequestBody @Valid Stock stock) {
-        try{
-            Stock updatedStock = new Stock();
-            return ResponseEntity.status(HttpStatus.OK).body(updatedStock);
-        } catch(Exception e){
+    @PutMapping("/{id}")
+    public ResponseEntity<Stock> updateStock(@PathVariable("id") Long stockId, @RequestBody @Valid Stock stock) {
+        try {
+            Stock updatedStock = stockService.updateStock(stockId, stock);
+            return ResponseEntity.ok(updatedStock);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
