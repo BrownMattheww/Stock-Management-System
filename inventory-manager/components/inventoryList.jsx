@@ -1,20 +1,35 @@
 import { useState, useEffect } from "react";
+import './InventoryManager.css';
+
+
 
 export default function InventoryList() {
   const [items, setItems] = useState([]);
 
+  async function getInventoryItems() {
+    try {
+      const response = await fetch("http://localhost:8080/stockLocation", {method: "GET"})
+      if(!response.ok){
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const results = await response.json();
+      setItems(results);
+      console.log(results);
+
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
   useEffect(() => {
-    fetch('/api/inventory')
-      .then(res => res.json())
-      .then(data => setItems(data))
-      .catch(err => console.error('Error fetching inventory:', err));
+    getInventoryItems();
   }, []);
 
   return (
     <table>
       <thead>
         <tr>
-          <th>Id</th>
           <th>Stock Name</th>
           <th>Aisle</th>
           <th>Shelf</th>
@@ -24,13 +39,12 @@ export default function InventoryList() {
       </thead>
       <tbody>
         {items.map(item => (
-          <tr key={item.id}>
-            <td>{item.id}</td>
-            <td>{item.name}</td>
+          <tr key={item.stockName}>
+            <td>{item.stockName}</td>
             <td>{item.aisle}</td>
             <td>{item.shelf}</td>
             <td>{item.quantity}</td>
-            <td>${item.price.toFixed(2)}</td>
+            <td>${typeof item.stockPrice === 'number' ? item.stockPrice.toFixed(2) : 'N/A'}</td>
           </tr>
         ))}
       </tbody>

@@ -9,11 +9,12 @@ public class StockLocationDTO {
     private int quantity;
     private BigDecimal stockPrice;
 
-    public StockLocationDTO(String stockName, String aisle, String shelf, int quantity) {
+    public StockLocationDTO(String stockName, String aisle, String shelf, int quantity, BigDecimal stockPrice) {
         this.stockName = stockName;
         this.aisle = aisle;
         this.shelf = shelf;
         this.quantity = quantity;
+        this.stockPrice = stockPrice;
     }
 
     public String getStockName() {

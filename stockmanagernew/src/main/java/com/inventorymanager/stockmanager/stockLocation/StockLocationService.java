@@ -45,7 +45,7 @@ public class StockLocationService {
 
     public StockLocation updateStockLocation(StockLocation stockLocation, StockLocationId id) {
         Optional<StockLocation> updatedStockLocation = StockLocationRepository.findById(id);
-        if (!updatedStockLocation.isPresent()) {
+        if (updatedStockLocation.isEmpty()) {
             throw new EntityNotFoundException("StockLocation with id " + id + " not found!");
         }
 

@@ -12,6 +12,7 @@ import java.util.List;
 
 @RequestMapping("/stockLocation")
 @RestController
+@CrossOrigin
 public class StockLocationController {
     final StockLocationService stockLocationService;
     final StockService stockService;
@@ -44,16 +45,17 @@ public class StockLocationController {
     public ResponseEntity<StockLocationDTO> createStock(@RequestBody StockLocationDTO dto) {
         Stock createdStock = stockLocationService.createStockWithLocation(dto);
 
-        StockLocation location = createdStock.getStockLocations().stream().findFirst().orElse(null);
+        StockLocation location = createdStock.getStockLocations().stream()
+                .findFirst()
+                .orElse(null);
 
         StockLocationDTO responseDto = new StockLocationDTO(
                 createdStock.getStockName(),
                 location != null ? location.getLocation().getAisle() : null,
                 location != null ? location.getLocation().getShelf() : null,
-                location != null ? location.getQuantity() : 0
+                location != null ? location.getQuantity() : 0,
+                createdStock.getStockPrice()  // Directly passing stock price here
         );
-
-        responseDto.setStockPrice(createdStock.getStockPrice());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }

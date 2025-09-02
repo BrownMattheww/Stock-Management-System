@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface StockLocationRepository extends JpaRepository<StockLocation, StockLocationId> {
     @Query("SELECT new com.inventorymanager.stockmanager.stockLocation.StockLocationDTO(" +
-            "sl.stock.stockName, sl.location.aisle, sl.location.shelf, sl.quantity) " +
+            "sl.stock.stockName, sl.location.aisle, sl.location.shelf, sl.quantity, sl.stock.stockPrice) " +
             "FROM StockLocation sl")
     List<StockLocationDTO> findAllStockLocationDetails();
 }
