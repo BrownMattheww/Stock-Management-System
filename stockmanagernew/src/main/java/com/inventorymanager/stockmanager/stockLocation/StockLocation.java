@@ -1,5 +1,6 @@
 package com.inventorymanager.stockmanager.stockLocation;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.inventorymanager.stockmanager.location.Location;
 import com.inventorymanager.stockmanager.stock.Stock;
 import jakarta.persistence.*;
@@ -12,6 +13,7 @@ public class StockLocation {
     @ManyToOne
     @MapsId("stockId")
     @JoinColumn(name = "stock_id")
+    @JsonBackReference
     private Stock stock;
 
     @ManyToOne

@@ -21,7 +21,7 @@ public class StockLocationController {
         this.stockService = stockService;
     }
 
-    @GetMapping("/stock-locations")
+    @GetMapping
     public List<StockLocationDTO> findAllStockLocations() {
         try {
             return stockLocationService.findAllStockLocationDetails();
@@ -40,14 +40,22 @@ public class StockLocationController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<StockLocation> addStockLocation(@RequestBody StockLocation stockLocation) {
-        try {
-            StockLocation newStockLocation = stockLocationService.createStockLocation(stockLocation);
-            return ResponseEntity.ok(newStockLocation);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    @PostMapping("/stock-with-location")
+    public ResponseEntity<StockLocationDTO> createStock(@RequestBody StockLocationDTO dto) {
+        Stock createdStock = stockLocationService.createStockWithLocation(dto);
+
+        StockLocation location = createdStock.getStockLocations().stream().findFirst().orElse(null);
+
+        StockLocationDTO responseDto = new StockLocationDTO(
+                createdStock.getStockName(),
+                location != null ? location.getLocation().getAisle() : null,
+                location != null ? location.getLocation().getShelf() : null,
+                location != null ? location.getQuantity() : 0
+        );
+
+        responseDto.setStockPrice(createdStock.getStockPrice());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @PutMapping("/{id}")
@@ -64,11 +72,5 @@ public class StockLocationController {
     public ResponseEntity<Void> deleteStockLocationById(@PathVariable StockLocationId id) {
         stockLocationService.removeStockLocation(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/stock-locations")
-    public ResponseEntity<Stock> createStock(@RequestBody StockLocationDTO dto) {
-        Stock createdStock = stockLocationService.createStockWithLocation(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdStock);
     }
 }

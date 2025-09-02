@@ -1,5 +1,6 @@
 package com.inventorymanager.stockmanager.stock;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.inventorymanager.stockmanager.location.Location;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -23,6 +24,7 @@ public class Stock {
     private BigDecimal stockPrice;
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<StockLocation> stockLocations = new HashSet<>();
 
     public Stock() {
@@ -60,5 +62,9 @@ public class Stock {
 
     public Long getId() {
         return stockId;
+    }
+
+    public Set<StockLocation> getStockLocations() {
+        return stockLocations;
     }
 }
