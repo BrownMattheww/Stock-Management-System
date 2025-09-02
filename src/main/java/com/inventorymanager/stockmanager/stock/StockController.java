@@ -27,7 +27,7 @@ public class StockController {
     @PostMapping
     public ResponseEntity<Stock> createStock(@RequestBody @Valid Stock stock) {
         try {
-            Stock createdStock = new Stock();
+            Stock createdStock = stockService.createStock(stock);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdStock);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -1,5 +1,7 @@
 package com.inventorymanager.stockmanager.stockLocation;
 
+import com.inventorymanager.stockmanager.stock.Stock;
+import com.inventorymanager.stockmanager.stock.StockService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +14,11 @@ import java.util.List;
 @RestController
 public class StockLocationController {
     final StockLocationService stockLocationService;
+    final StockService stockService;
 
-    public StockLocationController(StockLocationService stockLocationService) {
+    public StockLocationController(StockLocationService stockLocationService, StockService stockService) {
         this.stockLocationService = stockLocationService;
+        this.stockService = stockService;
     }
 
     @GetMapping("/stock-locations")
@@ -60,5 +64,11 @@ public class StockLocationController {
     public ResponseEntity<Void> deleteStockLocationById(@PathVariable StockLocationId id) {
         stockLocationService.removeStockLocation(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/stock-locations")
+    public ResponseEntity<Stock> createStock(@RequestBody StockLocationDTO dto) {
+        Stock createdStock = stockLocationService.createStockWithLocation(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdStock);
     }
 }

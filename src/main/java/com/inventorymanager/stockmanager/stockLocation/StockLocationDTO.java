@@ -1,10 +1,13 @@
 package com.inventorymanager.stockmanager.stockLocation;
 
+import java.math.BigDecimal;
+
 public class StockLocationDTO {
     private String stockName;
     private String aisle;
     private String shelf;
     private int quantity;
+    private BigDecimal stockPrice;
 
     public StockLocationDTO(String stockName, String aisle, String shelf, int quantity) {
         this.stockName = stockName;
@@ -43,5 +46,13 @@ public class StockLocationDTO {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public BigDecimal getStockPrice() {
+        return stockPrice;
+    }
+
+    public void setStockPrice(BigDecimal stockPrice) {
+        this.stockPrice = stockPrice;
     }
 }
