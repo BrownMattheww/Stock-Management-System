@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
 import './InventoryManager.css';
 
-
-
 export default function InventoryList() {
   const [items, setItems] = useState([]);
 
+  // Fetches inventory items and puts them in table
   async function getInventoryItems() {
     try {
-      const response = await fetch("http://localhost:8080/stockLocation", {method: "GET"})
-      if(!response.ok){
+      const response = await fetch("http://localhost:8080/stockLocation", { method: "GET" });
+      if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
 
@@ -27,27 +26,40 @@ export default function InventoryList() {
   }, []);
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Stock Name</th>
-          <th>Aisle</th>
-          <th>Shelf</th>
-          <th>Quantity</th>
-          <th>Stock Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        {items.map(item => (
-          <tr key={item.stockName}>
-            <td>{item.stockName}</td>
-            <td>{item.aisle}</td>
-            <td>{item.shelf}</td>
-            <td>{item.quantity}</td>
-            <td>${typeof item.stockPrice === 'number' ? item.stockPrice.toFixed(2) : 'N/A'}</td>
+    <div className="inventory-container">
+      <div className="inventory-actions">
+        <button className="create-stock-button">Create Stock</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Stock Name</th>
+            <th>Aisle</th>
+            <th>Shelf</th>
+            <th>Quantity</th>
+            <th>Stock Price</th>
+            <th>Actions</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {items.map(item => (
+            <tr key={item.stockId}>
+              <td>{item.stockId}</td>
+              <td>{item.stockName}</td>
+              <td>{item.aisle}</td>
+              <td>{item.shelf}</td>
+              <td>{item.quantity}</td>
+              <td>${typeof item.stockPrice === 'number' ? item.stockPrice.toFixed(2) : 'N/A'}</td>
+              <td>
+                <button className="edit-button">Edit</button>
+                <button className="delete-button">Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
