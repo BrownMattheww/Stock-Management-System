@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import ModalForm from "./modalForm";
 import './InventoryManager.css';
 
 export default function InventoryList() {
@@ -26,9 +27,10 @@ export default function InventoryList() {
   }, []);
 
   return (
-    <div className="inventory-container">
+    <>
+      <div className="inventory-container">
       <div className="inventory-actions">
-        <button className="create-stock-button">Create Stock</button>
+        <ModalForm buttonName="Create Stock" />
       </div>
 
       <table>
@@ -61,5 +63,6 @@ export default function InventoryList() {
         </tbody>
       </table>
     </div>
+    </>
   );
 }
